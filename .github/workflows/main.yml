@@ -12,13 +12,6 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Download previous data
-        uses: actions/download-artifact@v4
-        with:
-          name: spotify-data
-          path: data
-        continue-on-error: true  # La 1ère fois, il n’y a rien
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -37,12 +30,6 @@ jobs:
           SENDER_MAIL: ${{ secrets.SENDER_MAIL }}
           SENDER_APP_PASSWORD: ${{ secrets.SENDER_APP_PASSWORD }}
           RECEIVER_MAIL: ${{ secrets.RECEIVER_MAIL }}
+          DATA_DIR: ${{ secrets.DATA_DIR_DELL }}
         run: |
           python scripts/main.py
-
-
-      - name: Upload updated data
-        uses: actions/upload-artifact@v4
-        with:
-          name: spotify-data
-          path: data

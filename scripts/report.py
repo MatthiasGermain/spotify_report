@@ -24,7 +24,7 @@ def generate_daily_report(date_str, data_dir):
     """
     generate_daily_report generates a daily report for the given date.
     """
-    file_path = os.path.join(data_dir, f"{date_str}.csv")
+    file_path = os.path.join(os.getenv('DATA_DIR', data_dir), f"{date_str}.csv")
     if not os.path.exists(file_path):
         print(f"No data for {date_str}")
         return
@@ -60,7 +60,7 @@ def generate_daily_report(date_str, data_dir):
         total_seconds += listened
     # Get previous day
     prev_date = (datetime.strptime(date_str, "%Y-%m-%d") - timedelta(days=1)).strftime('%Y-%m-%d')
-    prev_file = os.path.join(data_dir, f"{prev_date}.csv")
+    prev_file = os.path.join(os.getenv('DATA_DIR', data_dir), f"{prev_date}.csv")
     prev_total_seconds = None
     prev_total_tracks = None
     if os.path.exists(prev_file):
@@ -82,7 +82,7 @@ def generate_daily_report(date_str, data_dir):
                 listened = duration
             prev_total_seconds += listened
     # Write report
-    report_path = os.path.join(data_dir, f"{date_str}_report.txt")
+    report_path = os.path.join(os.getenv('DATA_DIR', data_dir), f"{date_str}_report.txt")
     with open(report_path, 'w', encoding='utf-8') as f:
         f.write(f"Report for {date_str}\n")
         if prev_total_seconds is not None and prev_total_tracks is not None:

@@ -30,7 +30,7 @@ def main():
     """
     Main function to orchestrate the daily report generation and sending process.
     """
-    data_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../data'))
+    data_dir = os.getenv('DATA_DIR', os.path.abspath(os.path.join(os.path.dirname(__file__), '../data')))
     send_report_path = os.path.join(data_dir, 'send_report.csv')
 
     # 1. Get last 50 listens and update daily CSVs

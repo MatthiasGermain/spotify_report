@@ -126,5 +126,5 @@ if __name__ == "__main__":
     date = sys.argv[1] if len(sys.argv) > 1 else None
     if not date:
         date = datetime.now().strftime('%Y-%m-%d')
-    report_path = os.path.join(os.path.dirname(__file__), f"../data/{date}_report.txt")
+    report_path = os.path.join(os.getenv('DATA_DIR', os.path.join(os.path.dirname(__file__), '../data')), f"{date}_report.txt")
     send_report_email(report_path, date)

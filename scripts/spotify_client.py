@@ -15,7 +15,7 @@ CLIENT_SECRET = os.getenv('CLIENT_SECRET')
 REDIRECT_URI = os.getenv('REDIRECT_URI')
 SCOPE = 'user-read-recently-played'
 
-DATA_DIR = os.path.join(os.path.dirname(__file__), '../data')
+DATA_DIR = os.getenv('DATA_DIR', os.path.join(os.path.dirname(__file__), '../data'))
 
 def ms_to_min_sec(ms):
     """
