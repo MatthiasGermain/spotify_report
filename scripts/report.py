@@ -1,6 +1,7 @@
 """
 Report script to generate daily Spotify listening reports.
 """
+import logging
 import csv
 import os
 from datetime import datetime, timedelta
@@ -10,6 +11,7 @@ def parse_datetime(dt_str):
     """
     parse_datetime converts a Spotify datetime string to a datetime object.
     """
+    logging.info("Parsing datetime string: %s", dt_str)
     # Example: 2025-07-19T15:23:58.240Z
     return datetime.strptime(dt_str, "%Y-%m-%dT%H:%M:%S.%fZ")
 
@@ -24,8 +26,11 @@ def generate_daily_report(date_str, data_dir):
     """
     generate_daily_report generates a daily report for the given date.
     """
+    logging.info("Generating daily report for %s in %s", date_str, data_dir)
     file_path = os.path.join(os.getenv('DATA_DIR', data_dir), f"{date_str}.csv")
+    logging.info("Looking for file: %s", file_path)
     if not os.path.exists(file_path):
+        logging.warning("No data for %s", date_str)
         print(f"No data for {date_str}")
         return
     tracks = []
@@ -33,19 +38,23 @@ def generate_daily_report(date_str, data_dir):
         reader = csv.DictReader(f)
         for row in reader:
             tracks.append(row)
+    logging.info("Found %d tracks for %s", len(tracks), date_str)
     if not tracks:
+        logging.warning("No tracks found for %s", date_str)
         print(f"No tracks found for {date_str}")
         return
     # Count listens for all tracks
 
     track_names = [t['Track Name'] for t in tracks]
     track_counts = Counter(track_names)
+    logging.info("Track counts: %s", track_counts)
     # Count listens for all artists
     artist_list = []
     for t in tracks:
         # Split artists by comma and strip whitespace
         artist_list.extend([a.strip() for a in t['Artists'].split(',')])
     artist_counts = Counter(artist_list)
+    logging.info("Artist counts: %s", artist_counts)
     # Calculate total listening time
     total_seconds = 0
     for i, track in enumerate(tracks):
@@ -58,11 +67,13 @@ def generate_daily_report(date_str, data_dir):
         else:
             listened = duration
         total_seconds += listened
+    logging.info("Total listening time (seconds): %d", total_seconds)
     # Get previous day
     prev_date = (datetime.strptime(date_str, "%Y-%m-%d") - timedelta(days=1)).strftime('%Y-%m-%d')
     prev_file = os.path.join(os.getenv('DATA_DIR', data_dir), f"{prev_date}.csv")
     prev_total_seconds = None
     prev_total_tracks = None
+    logging.info("Looking for previous day file: %s", prev_file)
     if os.path.exists(prev_file):
         prev_tracks = []
         with open(prev_file, 'r', encoding='utf-8') as f:
@@ -83,6 +94,7 @@ def generate_daily_report(date_str, data_dir):
             prev_total_seconds += listened
     # Write report
     report_path = os.path.join(os.getenv('DATA_DIR', data_dir), f"{date_str}_report.txt")
+    logging.info("Writing report to %s", report_path)
     with open(report_path, 'w', encoding='utf-8') as f:
         f.write(f"Report for {date_str}\n")
         if prev_total_seconds is not None and prev_total_tracks is not None:
@@ -102,7 +114,7 @@ def generate_daily_report(date_str, data_dir):
         f.write("\nTop artists by listen count:\n")
         for artist, count in artist_counts.most_common():
             f.write(f"  {artist}: {count} listens\n")
-    print(f"Report written to {report_path}")
+    logging.info("Report written to %s", report_path)
 
 if __name__ == "__main__":
     # Example usage: generate_daily_report('2025-07-19', '../data')

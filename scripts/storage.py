@@ -1,6 +1,7 @@
 """
 Storage Script for Spotify Data
 """
+import logging
 import os
 import csv
 from collections import defaultdict
@@ -9,6 +10,7 @@ def save_listening_history(data, filename):
     """
     Save listening history to a CSV file.
     """
+    logging.info("Saving listening history to %s", filename)
     with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(['Index', 'Track Name', 'Artists', 'Duration', 'Played At'])
@@ -20,7 +22,7 @@ def save_tracks_per_day(tracks, data_dir):
     Save tracks to daily CSV files, avoiding duplicates.
     Each track is a dict with keys: index, name, artists, duration, played_at, id
     """
-
+    logging.info("Saving tracks per day to %s", data_dir)
     # Group tracks by date
     tracks_by_date = defaultdict(list)
     for track in tracks:

@@ -1,6 +1,7 @@
 """
 Script to send daily Spotify reports via email.
 """
+import logging
 import os
 import sys
 import smtplib
@@ -13,6 +14,7 @@ def format_report_html(report_content):
     """
     format_report_html formats the report content into HTML for better readability.
     """
+    logging.info("Formatting report content to HTML")
     # Split report into sections
     lines = report_content.splitlines()
     html = []
@@ -91,7 +93,9 @@ def send_report_email(report_path, date):
     """
     send_report_email sends the daily report via email.
     """
+    logging.info(f"Sending report email for {date} from {report_path}")
     load_dotenv()
+    logging.info("Loaded environment variables")
     sender = os.getenv('SENDER_MAIL')
     password = os.getenv('SENDER_APP_PASSWORD')
     receiver = os.getenv('RECEIVER_MAIL')
@@ -99,11 +103,13 @@ def send_report_email(report_path, date):
     # Read report
     with open(report_path, 'r', encoding='utf-8') as f:
         report_content = f.read()
+    logging.info("Read report content from file")
     # Format email
     msg = MIMEMultipart()
     msg['From'] = sender
     msg['To'] = receiver
     msg['Subject'] = subject
+    logging.info(f"Prepared email: From {sender} To {receiver} Subject {subject}")
     # Improved HTML formatting
     html_body = f"""
     <html><body style='background:#f7f7f7;padding:20px;'>
@@ -121,6 +127,7 @@ def send_report_email(report_path, date):
         print(f"Report sent to {receiver}")
     except Exception as e:
         print(f"Failed to send email: {e}")
+        logging.error(f"Failed to send email: {e}")
 
 if __name__ == "__main__":
     date = sys.argv[1] if len(sys.argv) > 1 else None
