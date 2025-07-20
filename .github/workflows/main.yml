@@ -1,0 +1,34 @@
+name: Run Spotify report every hour
+
+on:
+  schedule:
+    - cron: '0 * * * *'   # Toutes les heures
+  workflow_dispatch:       # Permet aussi un lancement manuel
+
+jobs:
+  run-spotify-report:
+    runs-on: DELL_8GO
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13.5'  # Ou la version que tu utilises
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run main.py
+        env:
+          CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
+          REDIRECT_URI: ${{ secrets.REDIRECT_URI }}
+          SENDER_MAIL: ${{ secrets.SENDER_MAIL }}
+          SENDER_APP_PASSWORD: ${{ secrets.SENDER_APP_PASSWORD }}
+          RECEIVER_MAIL: ${{ secrets.RECEIVER_MAIL }}
+        run: |
+          python scripts/main.py
