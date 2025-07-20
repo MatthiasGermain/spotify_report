@@ -7,7 +7,7 @@ on:
 
 jobs:
   run-spotify-report:
-    runs-on: DELL_8GO
+    runs-on: self-hosted
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
