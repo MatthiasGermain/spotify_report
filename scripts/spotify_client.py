@@ -16,6 +16,7 @@ REDIRECT_URI = os.getenv('REDIRECT_URI')
 SCOPE = 'user-read-recently-played'
 
 DATA_DIR = os.getenv('DATA_DIR', os.path.join(os.path.dirname(__file__), '../data'))
+TOKEN_CACHE_PATH = os.getenv('TOKEN_CACHE_PATH', os.path.join(os.path.dirname(__file__), '../spotify_token_cache'))
 
 def ms_to_min_sec(ms):
     """
@@ -33,7 +34,8 @@ def get_recent_tracks(return_data=False):
         client_id=CLIENT_ID,
         client_secret=CLIENT_SECRET,
         redirect_uri=REDIRECT_URI,
-        scope=SCOPE
+        scope=SCOPE,
+        cache_path=TOKEN_CACHE_PATH
     ))
 
     results = sp.current_user_recently_played(limit=50)

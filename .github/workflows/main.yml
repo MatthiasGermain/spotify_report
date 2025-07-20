@@ -31,5 +31,6 @@ jobs:
           SENDER_APP_PASSWORD: ${{ secrets.SENDER_APP_PASSWORD }}
           RECEIVER_MAIL: ${{ secrets.RECEIVER_MAIL }}
           DATA_DIR: ${{ secrets.DATA_DIR_DELL }}
+          TOKEN_CACHE_PATH: ${{ secrets.TOKEN_PATH_DELL }}
         run: |
           python scripts/main.py
