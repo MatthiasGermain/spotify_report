@@ -1,9 +1,7 @@
-name: Run Spotify report every hour
+name: Run Spotify report manually
 
 on:
-  schedule:
-    - cron: '0 * * * *'   # Toutes les heures
-  workflow_dispatch:       # Permet aussi un lancement manuel
+  workflow_dispatch:  # Lancement manuel uniquement
 
 jobs:
   run-spotify-report:
@@ -15,7 +13,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.13.5'  # Ou la version que tu utilises
+          python-version: '3.13.5'  # Ou celle que tu utilises
 
       - name: Install dependencies
         run: |
