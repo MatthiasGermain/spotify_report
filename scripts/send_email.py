@@ -93,7 +93,7 @@ def send_report_email(report_path, date):
     """
     send_report_email sends the daily report via email.
     """
-    logging.info(f"Sending report email for {date} from {report_path}")
+    logging.info("Sending report email for %s from %s", date, report_path)
     load_dotenv()
     logging.info("Loaded environment variables")
     sender = os.getenv('SENDER_MAIL')
@@ -109,7 +109,7 @@ def send_report_email(report_path, date):
     msg['From'] = sender
     msg['To'] = receiver
     msg['Subject'] = subject
-    logging.info(f"Prepared email: From {sender} To {receiver} Subject {subject}")
+    logging.info("Prepared email: From %s To %s Subject %s", sender, receiver, subject)
     # Improved HTML formatting
     html_body = f"""
     <html><body style='background:#f7f7f7;padding:20px;'>
@@ -124,10 +124,8 @@ def send_report_email(report_path, date):
         with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
             server.login(sender, password)
             server.sendmail(sender, receiver, msg.as_string())
-        print(f"Report sent to {receiver}")
     except Exception as e:
-        print(f"Failed to send email: {e}")
-        logging.error(f"Failed to send email: {e}")
+        logging.error("Failed to send email: %s", e)
 
 if __name__ == "__main__":
     date = sys.argv[1] if len(sys.argv) > 1 else None

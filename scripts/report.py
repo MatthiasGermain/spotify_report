@@ -31,8 +31,7 @@ def generate_daily_report(date_str, data_dir):
     logging.info("Looking for file: %s", file_path)
     if not os.path.exists(file_path):
         logging.warning("No data for %s", date_str)
-        print(f"No data for {date_str}")
-        return
+        return False
     tracks = []
     with open(file_path, 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
@@ -41,8 +40,7 @@ def generate_daily_report(date_str, data_dir):
     logging.info("Found %d tracks for %s", len(tracks), date_str)
     if not tracks:
         logging.warning("No tracks found for %s", date_str)
-        print(f"No tracks found for {date_str}")
-        return
+        return False
     # Count listens for all tracks
 
     track_names = [t['Track Name'] for t in tracks]
@@ -115,6 +113,7 @@ def generate_daily_report(date_str, data_dir):
         for artist, count in artist_counts.most_common():
             f.write(f"  {artist}: {count} listens\n")
     logging.info("Report written to %s", report_path)
+    return True
 
 if __name__ == "__main__":
     # Example usage: generate_daily_report('2025-07-19', '../data')

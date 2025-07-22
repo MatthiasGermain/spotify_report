@@ -37,12 +37,12 @@ def get_recent_tracks(return_data=False):
         client_id=CLIENT_ID,
         client_secret=CLIENT_SECRET,
         redirect_uri=REDIRECT_URI,
-        scope=SCOPE,
-        cache_path=TOKEN_CACHE_PATH
+        cache_path=TOKEN_CACHE_PATH,
+        scope=SCOPE
     ))
 
     logging.info("Fetching recent tracks from Spotify API")
-    results = sp.current_user_recently_played(limit=50)
+    results = sp.current_user_recently_played(limit=50) 
     tracks = results['items']
 
     track_data = []
@@ -65,11 +65,7 @@ def get_recent_tracks(return_data=False):
     save_tracks_per_day(track_data, os.path.abspath(DATA_DIR))
 
     if return_data:
-        logging.info("Returning track data")
         return track_data
-    for row in track_data:
-        print(f"{row['index']}. {row['name']} - {row['artists']} [{row['duration']}] ({row['played_at']})")
-    logging.info("Finished get_recent_tracks")
 
 if __name__ == "__main__":
     get_recent_tracks()

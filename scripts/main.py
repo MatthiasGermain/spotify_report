@@ -37,7 +37,7 @@ def main():
     data_dir = os.getenv('DATA_DIR', os.path.abspath(os.path.join(os.path.dirname(__file__), '../data')))
     send_report_path = os.path.join(data_dir, 'send_report.csv')
 
-    # 1. Get last 50 listens and update daily CSVs
+    # 1. Get last listens and update daily CSVs
     logging.info("Getting recent tracks and updating daily CSVs")
     track_data = get_recent_tracks(return_data=True)  # update CSVs and get track data
     save_tracks_per_day(track_data, data_dir)
@@ -51,11 +51,13 @@ def main():
 
     # 3. Generate, send, and record report
     logging.info("Generating, sending, and recording report")
-    generate_daily_report(yesterday, data_dir)
-    report_path = os.path.join(data_dir, f"{yesterday}_report.txt")
-    send_report_email(report_path, yesterday)
-    add_sent_report_date(send_report_path, yesterday)
-    logging.info("Report for %s sent and recorded.", yesterday)
+    if generate_daily_report(yesterday, data_dir):
+        report_path = os.path.join(data_dir, f"{yesterday}_report.txt")
+        send_report_email(report_path, yesterday)
+        add_sent_report_date(send_report_path, yesterday)
+        logging.info("Report for %s sent and recorded.", yesterday)
+    else:
+        logging.warning("No tracks or report found for %s. Skipping email sending.", yesterday)
 
 if __name__ == "__main__":
     main()
