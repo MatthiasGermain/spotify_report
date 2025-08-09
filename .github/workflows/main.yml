@@ -1,6 +1,11 @@
 name: Run Spotify report every hour or Manually
 
 on:
+  schedule:
+    # 06h à 23h heure locale → 04h à 21h UTC
+    - cron: '0 6-23 * * *'
+    # 00h à 02h heure locale → 22h à 0h UTC (jour précédent et jour suivant)
+    - cron: '0 0-2 * * *'
   workflow_dispatch:  # Lancement manuel uniquement
 
 jobs:
