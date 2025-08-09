@@ -10,10 +10,21 @@ from collections import Counter
 def parse_datetime(dt_str):
     """
     parse_datetime converts a Spotify datetime string to a datetime object.
+    Handles both formats with and without milliseconds.
     """
     logging.info("Parsing datetime string: %s", dt_str)
-    # Example: 2025-07-19T15:23:58.240Z
-    return datetime.strptime(dt_str, "%Y-%m-%dT%H:%M:%S.%fZ")
+    formats = [
+        "%Y-%m-%dT%H:%M:%S.%fZ",  # avec millisecondes
+        "%Y-%m-%dT%H:%M:%SZ",     # sans millisecondes
+    ]
+    for fmt in formats:
+        try:
+            return datetime.strptime(dt_str, fmt)
+        except ValueError:
+            continue
+
+    logging.warning("Unrecognized datetime format: %s", dt_str)
+    return None  # ou raise une exception personnalisée
 
 def min_sec_to_seconds(min_sec):
     """
