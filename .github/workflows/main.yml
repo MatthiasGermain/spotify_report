@@ -11,6 +11,7 @@ on:
 jobs:
   run-spotify-report:
     runs-on: self-hosted
+    timeout-minutes: 5
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
